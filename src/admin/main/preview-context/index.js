@@ -1,5 +1,6 @@
 import PropTypes from "prop-types";
 import React, {
+  useCallback,
   useState,
   useEffect,
   useMemo,
@@ -9,13 +10,141 @@ import React, {
 import { useIntl } from "react-intl";
 import { request, PopUpWarning } from "strapi-helper-plugin";
 
-import { get, isEmpty, isEqual } from "lodash";
+import { get, isEmpty, isEqual, isArray, isObject, cloneDeep } from "lodash";
 
 const CONTENT_MANAGER_PLUGIN_ID = "content-manager";
 
 const PreviewContext = createContext(undefined);
 
+const helperCleanData = (value, key) => {
+  if (isArray(value)) {
+    return value.map(obj => (obj[key] ? obj[key] : obj));
+  }
+  if (isObject(value)) {
+    return value[key];
+  }
+
+  return value;
+};
+
+const cleanData = (retrievedData, currentSchema, componentsSchema) => {
+  const getType = (schema, attrName) => get(schema, ['attributes', attrName, 'type'], '');
+  const getOtherInfos = (schema, arr) => get(schema, ['attributes', ...arr], '');
+
+  const recursiveCleanData = (data, schema) => {
+    return Object.keys(data).reduce((acc, current) => {
+      const attrType = getType(schema, current);
+      const value = get(data, current);
+      const component = getOtherInfos(schema, [current, 'component']);
+      const isRepeatable = getOtherInfos(schema, [current, 'repeatable']);
+      let cleanedData;
+
+      switch (attrType) {
+        case 'json':
+          try {
+            cleanedData = JSON.parse(value);
+          } catch (err) {
+            cleanedData = value;
+          }
+
+          break;
+        case 'date':
+          cleanedData =
+            value && value._isAMomentObject === true ? value.format('YYYY-MM-DD') : value;
+          break;
+        case 'datetime':
+          cleanedData = value && value._isAMomentObject === true ? value.toISOString() : value;
+          break;
+        case 'media':
+          if (getOtherInfos(schema, [current, 'multiple']) === true) {
+            cleanedData = value ? value.filter(file => !(file instanceof File)) : null;
+          } else {
+            cleanedData = get(value, 0) instanceof File ? null : get(value, 'id', null);
+          }
+          break;
+        case 'component':
+          if (isRepeatable) {
+            cleanedData = value
+              ? value.map(data => {
+                  const subCleanedData = recursiveCleanData(data, componentsSchema[component]);
+
+                  return subCleanedData;
+                })
+              : value;
+          } else {
+            cleanedData = value ? recursiveCleanData(value, componentsSchema[component]) : value;
+          }
+          break;
+        case 'dynamiczone':
+          cleanedData = value.map(componentData => {
+            const subCleanedData = recursiveCleanData(
+              componentData,
+              componentsSchema[componentData.__component]
+            );
+
+            return subCleanedData;
+          });
+          break;
+        default:
+          // The helper is mainly used for the relations in order to just send the id
+          cleanedData = helperCleanData(value, 'id');
+      }
+
+      acc[current] = cleanedData;
+
+      return acc;
+    }, {});
+  };
+
+  return recursiveCleanData(retrievedData, currentSchema);
+};
+
+const removeKeyInObject = (obj, keyToRemove) => {
+  if (!obj) {
+    return obj;
+  }
+
+  return Object.keys(obj).reduce((acc, current) => {
+    const value = acc[current];
+
+    if (value === null) {
+      return acc;
+    }
+
+    if (Array.isArray(value)) {
+      if (Array.isArray(acc)) {
+        acc[current] = removeKeyInObject(value, keyToRemove);
+
+        return acc;
+      }
+
+      return { ...acc, [current]: value.map(obj => removeKeyInObject(obj, keyToRemove)) };
+    }
+
+    if (typeof value === 'object') {
+      if (value._isAMomentObject === true) {
+        return { ...acc, [current]: value };
+      }
+
+      if (Array.isArray(acc)) {
+        acc[current] = removeKeyInObject(value, keyToRemove);
+
+        return acc;
+      }
+
+      return { ...acc, [current]: removeKeyInObject(value, keyToRemove) };
+    }
+
+    if (current === keyToRemove) {
+      delete acc[current];
+    }
+
+    return acc;
+  }, obj);
+};
+
 export const PreviewProvider = ({
+  allLayoutData,
   children,
   initialData,
   isCreatingEntry,
@@ -52,6 +181,26 @@ export const PreviewProvider = ({
     );
   }, [initialData, isCreatingEntry, modifiedData]);
 
+  console.log({ allLayoutData });
+
+  const currentContentTypeLayout = get(allLayoutData, ['contentType'], {});
+
+  const createFormData = useCallback(
+    data => {
+      // First we need to remove the added keys needed for the dnd
+      const preparedData = removeKeyInObject(cloneDeep(data), '__temp_key__');
+      // Then we need to apply our helper
+      const cleanedData = cleanData(
+        preparedData,
+        currentContentTypeLayout,
+        allLayoutData.components
+      );
+
+      return cleanedData;
+    },
+    [allLayoutData.components, currentContentTypeLayout]
+  );
+
   const previewHeaderActions = useMemo(() => {
     const headerActions = [];
 
@@ -77,13 +226,16 @@ export const PreviewProvider = ({
             );
 
             if (data.url) {
-              window.open(data.url, "_blank");
+              const body = createFormData(modifiedData);
+              console.log({ data, body });
+              // const res = await request(data.url, { method: 'POST', body })
             } else {
               strapi.notification.error(
                 getPreviewPluginTrad("error.previewUrl.notFound")
               );
             }
           } catch (_e) {
+            console.log('Error previewing:', _e.stack || _e.message || _e);
             strapi.notification.error(
               getPreviewPluginTrad("error.previewUrl.notFound")
             );
@@ -97,42 +249,6 @@ export const PreviewProvider = ({
           minWidth: 100,
         },
       });
-
-      if (initialData.cloneOf) {
-        headerActions.push({
-          disabled: didChangeData,
-          label: formatMessage({
-            id: getPreviewPluginTrad("containers.Edit.publish"),
-          }),
-          color: "primary",
-          onClick: async () => {
-            toggleWarningPublish();
-          },
-          type: "button",
-          style: {
-            paddingLeft: 15,
-            paddingRight: 15,
-            fontWeight: 600,
-            minWidth: 100,
-          },
-        });
-      } else {
-        headerActions.push({
-          disabled: didChangeData,
-          label: formatMessage({
-            id: getPreviewPluginTrad("containers.Edit.clone"),
-          }),
-          color: "secondary",
-          onClick: toggleWarningClone,
-          type: "button",
-          style: {
-            paddingLeft: 15,
-            paddingRight: 15,
-            fontWeight: 600,
-            minWidth: 75,
-          },
-        });
-      }
     }
 
     return headerActions;
