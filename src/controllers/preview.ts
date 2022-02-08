@@ -1,5 +1,6 @@
 "use strict";
 import { Context } from "koa";
+import axios from "axios";
 import _ from "lodash";
 const validateSettings = require("./validations/settings");
 
@@ -62,22 +63,20 @@ module.exports = {
       request: { body },
     } = ctx;
 
-    console.log({ body });
-
     const { url, info } = body;
 
     console.log({ url, info });
-    
-    const res = await fetch(url, {
+
+    const res = await axios.post(url, {
       method: "POST",
       body: JSON.stringify(info),
       headers: {
         "Content-Type": "application/json",
       },
     });
-    const previewUrl = await res.text();
-    console.log({ url, info, previewUrl });
-    ctx.send({ url: previewUrl || "" });
+
+    console.log({ res, info });
+    ctx.send({ url: res.data || "" });
   },
   /**
    * Get settings of the plugin

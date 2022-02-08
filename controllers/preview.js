@@ -35,7 +35,11 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
+var axios_1 = __importDefault(require("axios"));
 var validateSettings = require("./validations/settings");
 /**
  * preview.js controller
@@ -115,15 +119,14 @@ module.exports = {
     },
     getRemotePreviewUrl: function (ctx) {
         return __awaiter(this, void 0, void 0, function () {
-            var body, url, info, res, previewUrl;
+            var body, url, info, res;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         body = ctx.request.body;
-                        console.log({ body: body });
                         url = body.url, info = body.info;
                         console.log({ url: url, info: info });
-                        return [4 /*yield*/, fetch(url, {
+                        return [4 /*yield*/, axios_1.default.post(url, {
                                 method: "POST",
                                 body: JSON.stringify(info),
                                 headers: {
@@ -132,11 +135,8 @@ module.exports = {
                             })];
                     case 1:
                         res = _a.sent();
-                        return [4 /*yield*/, res.text()];
-                    case 2:
-                        previewUrl = _a.sent();
-                        console.log({ url: url, info: info, previewUrl: previewUrl });
-                        ctx.send({ url: previewUrl || "" });
+                        console.log({ res: res, info: info });
+                        ctx.send({ url: res.data || "" });
                         return [2 /*return*/];
                 }
             });
