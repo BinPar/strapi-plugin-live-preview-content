@@ -125,17 +125,14 @@ module.exports = {
                     case 0:
                         body = ctx.request.body;
                         url = body.url, info = body.info;
-                        console.log({ url: url, info: info });
-                        return [4 /*yield*/, axios_1.default.post(url, {
-                                method: "POST",
-                                body: JSON.stringify(info),
+                        return [4 /*yield*/, axios_1.default.post(url, info, {
                                 headers: {
                                     "Content-Type": "application/json",
                                 },
                             })];
                     case 1:
                         res = _a.sent();
-                        console.log({ res: res, info: info });
+                        console.log({ url: url, info: info, data: res.data });
                         ctx.send({ url: res.data || "" });
                         return [2 /*return*/];
                 }

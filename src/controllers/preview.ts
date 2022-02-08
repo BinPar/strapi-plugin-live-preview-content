@@ -65,17 +65,14 @@ module.exports = {
 
     const { url, info } = body;
 
-    console.log({ url, info });
 
-    const res = await axios.post(url, {
-      method: "POST",
-      body: JSON.stringify(info),
+    const res = await axios.post(url, info, {
       headers: {
         "Content-Type": "application/json",
       },
     });
 
-    console.log({ res, info });
+    console.log({ url, info, data: res.data });
     ctx.send({ url: res.data || "" });
   },
   /**
