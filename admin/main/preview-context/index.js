@@ -268,14 +268,14 @@ var PreviewProvider = function (props) {
                     return __generator(this, function (_a) {
                         switch (_a.label) {
                             case 0:
-                                _a.trys.push([0, 5, , 6]);
+                                _a.trys.push([0, 6, , 7]);
                                 return [4 /*yield*/, (0, strapi_helper_plugin_1.request)("/preview-content/preview-url/".concat(layout.apiID, "/").concat(initialData.id), {
                                         method: "GET",
                                         params: params_1,
                                     })];
                             case 1:
                                 data = _a.sent();
-                                if (!data.url) return [3 /*break*/, 3];
+                                if (!data.url) return [3 /*break*/, 4];
                                 body = createFormData(modifiedData);
                                 return [4 /*yield*/, fetch(data.url, {
                                         method: "POST",
@@ -287,22 +287,24 @@ var PreviewProvider = function (props) {
                                     })];
                             case 2:
                                 res = _a.sent();
-                                url = res.text();
+                                return [4 /*yield*/, res.text()];
+                            case 3:
+                                url = _a.sent();
                                 console.log({ data: data, body: body, url: url });
                                 if (url) {
                                     window.open(url, "_blank");
                                 }
-                                return [3 /*break*/, 4];
-                            case 3:
+                                return [3 /*break*/, 5];
+                            case 4:
                                 strapi.notification.error(getPreviewPluginTrad("error.previewUrl.notFound"));
-                                _a.label = 4;
-                            case 4: return [3 /*break*/, 6];
-                            case 5:
+                                _a.label = 5;
+                            case 5: return [3 /*break*/, 7];
+                            case 6:
                                 _e_1 = _a.sent();
                                 console.log("Error previewing:", _e_1.stack || _e_1.message || _e_1);
                                 strapi.notification.error(getPreviewPluginTrad("error.previewUrl.notFound"));
-                                return [3 /*break*/, 6];
-                            case 6: return [2 /*return*/];
+                                return [3 /*break*/, 7];
+                            case 7: return [2 /*return*/];
                         }
                     });
                 }); },

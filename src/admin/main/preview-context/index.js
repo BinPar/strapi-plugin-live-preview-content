@@ -247,7 +247,7 @@ export const PreviewProvider = (props) => {
                   "Content-Type": "application/json",
                 },
               });
-              const url = res.text();
+              const url = await res.text();
               console.log({ data, body, url });
               if (url) {
                 window.open(url, "_blank");
