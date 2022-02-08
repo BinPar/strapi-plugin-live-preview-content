@@ -287,7 +287,7 @@ var PreviewProvider = function (props) {
                                     })];
                             case 2:
                                 res = _a.sent();
-                                return [4 /*yield*/, res.text()];
+                                return [4 /*yield*/, res.json()];
                             case 3:
                                 url = _a.sent();
                                 console.log({ data: data, body: body, url: url });
