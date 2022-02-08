@@ -59,8 +59,14 @@ module.exports = {
   async getRemotePreviewUrl(ctx: Context) {
     const {
       // @ts-ignore
-      request: { body: { url, info } },
+      request: { body },
     } = ctx;
+
+    console.log({ body });
+
+    const { url, info } = body;
+
+    console.log({ url, info });
     
     const res = await fetch(url, {
       method: "POST",

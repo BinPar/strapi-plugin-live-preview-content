@@ -115,11 +115,14 @@ module.exports = {
     },
     getRemotePreviewUrl: function (ctx) {
         return __awaiter(this, void 0, void 0, function () {
-            var _a, url, info, res, previewUrl;
-            return __generator(this, function (_b) {
-                switch (_b.label) {
+            var body, url, info, res, previewUrl;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
                     case 0:
-                        _a = ctx.request.body, url = _a.url, info = _a.info;
+                        body = ctx.request.body;
+                        console.log({ body: body });
+                        url = body.url, info = body.info;
+                        console.log({ url: url, info: info });
                         return [4 /*yield*/, fetch(url, {
                                 method: "POST",
                                 body: JSON.stringify(info),
@@ -128,10 +131,10 @@ module.exports = {
                                 },
                             })];
                     case 1:
-                        res = _b.sent();
+                        res = _a.sent();
                         return [4 /*yield*/, res.text()];
                     case 2:
-                        previewUrl = _b.sent();
+                        previewUrl = _a.sent();
                         console.log({ url: url, info: info, previewUrl: previewUrl });
                         ctx.send({ url: previewUrl || "" });
                         return [2 /*return*/];
