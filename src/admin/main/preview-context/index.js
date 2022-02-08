@@ -242,12 +242,11 @@ export const PreviewProvider = (props) => {
               const res = await fetch(data.url, {
                 method: "POST",
                 body: JSON.stringify(body),
-                mode: "no-cors",
                 headers: {
                   "Content-Type": "application/json",
                 },
               });
-              const url = await res.json();
+              const url = await res.text();
               console.log({ data, body, url });
               if (url) {
                 window.open(url, "_blank");

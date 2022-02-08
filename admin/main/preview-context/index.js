@@ -280,14 +280,13 @@ var PreviewProvider = function (props) {
                                 return [4 /*yield*/, fetch(data.url, {
                                         method: "POST",
                                         body: JSON.stringify(body),
-                                        mode: "no-cors",
                                         headers: {
                                             "Content-Type": "application/json",
                                         },
                                     })];
                             case 2:
                                 res = _a.sent();
-                                return [4 /*yield*/, res.json()];
+                                return [4 /*yield*/, res.text()];
                             case 3:
                                 url = _a.sent();
                                 console.log({ data: data, body: body, url: url });
