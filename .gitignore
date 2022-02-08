@@ -118,9 +118,9 @@ build
 ############################
 # Strapi PLUGIN DIST
 ############################
-/config
-/controllers
-/middlewares
-/models
-/services
-/admin
+# /config
+# /controllers
+# /middlewares
+# /models
+# /services
+# /admin

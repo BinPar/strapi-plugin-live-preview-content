@@ -1,0 +1,12 @@
+{
+    "plugin.name": "Pratinjau Konten",
+    "settings.form.previewUrl.description": "Buat url pratinjau kustom untuk digunakan di frontend Anda",
+    "settings.form.previewUrl.label": "Pratinjau url",
+    "settings.form.previewUrl.available": "Parameter yang tersedia:",
+    "settings.form.previewUrl.available.contentType": "Jenis konten untuk kueri (diperlukan dalam url)",
+    "settings.form.previewUrl.available.id": "ID yang akan ditanyakan (harus ada di url)",
+    "settings.form.previewUrl.example": "Contoh:",
+    "settings.header.label": "Pratinjau Konten - Pengaturan",
+    "settings.section.general.label": "GENERAL",
+    "settings.sub-header.label": "Konfigurasi pengaturan untuk fungsi pengaturan pratinjau"
+}

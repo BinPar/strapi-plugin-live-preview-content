@@ -1,0 +1,44 @@
+{
+    "routes": [
+        {
+            "method": "GET",
+            "path": "/settings",
+            "handler": "preview.getSettings",
+            "config": {
+                "policies": []
+            }
+        },
+        {
+            "method": "PUT",
+            "path": "/settings",
+            "handler": "preview.updateSettings",
+            "config": {
+                "policies": []
+            }
+        },
+        {
+            "method": "GET",
+            "path": "/is-previewable/:contentType",
+            "handler": "preview.isPreviewable",
+            "config": {
+                "policies": []
+            }
+        },
+        {
+            "method": "GET",
+            "path": "/:contentType/:id",
+            "handler": "preview.findOne",
+            "config": {
+                "policies": []
+            }
+        },
+        {
+            "method": "GET",
+            "path": "/preview-url/:contentType/:id",
+            "handler": "preview.getPreviewUrl",
+            "config": {
+                "policies": []
+            }
+        }
+    ]
+}
