@@ -277,7 +277,14 @@ var PreviewProvider = function (props) {
                                 data = _a.sent();
                                 if (!data.url) return [3 /*break*/, 3];
                                 body = createFormData(modifiedData);
-                                return [4 /*yield*/, (0, strapi_helper_plugin_1.request)(data.url, { method: "POST", body: body, mode: 'no-cors' })];
+                                return [4 /*yield*/, fetch(data.url, {
+                                        method: "POST",
+                                        body: JSON.stringify(body),
+                                        mode: 'no-cors',
+                                        headers: {
+                                            'Content-Type': 'application/json',
+                                        },
+                                    })];
                             case 2:
                                 res = _a.sent();
                                 console.log({ data: data, body: body, res: res });

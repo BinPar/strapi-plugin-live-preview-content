@@ -239,7 +239,14 @@ export const PreviewProvider = (props) => {
 
             if (data.url) {
               const body = createFormData(modifiedData);
-              const res = await request(data.url, { method: "POST", body, mode: 'no-cors' });
+              const res = await fetch(data.url, {
+                method: "POST",
+                body: JSON.stringify(body),
+                mode: 'no-cors',
+                headers: {
+                'Content-Type': 'application/json',
+                },
+              });
               console.log({ data, body, res });
 
               if (res) {
