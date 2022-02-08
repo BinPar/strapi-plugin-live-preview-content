@@ -279,11 +279,11 @@ var PreviewProvider = function (props) {
                                 info = createFormData(modifiedData);
                                 return [4 /*yield*/, (0, strapi_helper_plugin_1.request)('/preview-content/remote-preview-url', {
                                         method: "POST",
-                                        body: JSON.stringify({ url: data.url, info: info }),
+                                        body: { url: data.url, info: info },
                                     })];
                             case 2:
                                 res = _a.sent();
-                                console.log({ data: data, body: info, res: res });
+                                console.log({ data: data, info: info, res: res });
                                 if (res.url) {
                                     window.open(res.url, "_blank");
                                 }

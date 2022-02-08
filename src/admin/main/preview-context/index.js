@@ -241,9 +241,9 @@ export const PreviewProvider = (props) => {
               const info = createFormData(modifiedData);
               const res = await request('/preview-content/remote-preview-url', {
                 method: "POST",
-                body: JSON.stringify({ url: data.url, info }),
+                body: { url: data.url, info },
               });
-              console.log({ data, body: info, res });
+              console.log({ data, info, res });
               if (res.url) {
                 window.open(res.url, "_blank");
               }
