@@ -222,7 +222,7 @@ export const PreviewProvider = (props) => {
     ) {
       const params = getPreviewUrlParams(initialData, modifiedData, layout);
       headerActions.push({
-        disabled: didChangeData,
+        disabled: false,
         label: formatMessage({
           id: getPreviewPluginTrad("containers.Edit.preview"),
         }),

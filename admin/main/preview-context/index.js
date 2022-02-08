@@ -258,7 +258,7 @@ var PreviewProvider = function (props) {
             ((isCreatingEntry && canCreate) || (!isCreatingEntry && canUpdate))) {
             var params_1 = getPreviewUrlParams(initialData, modifiedData, layout);
             headerActions.push({
-                disabled: didChangeData,
+                disabled: false,
                 label: formatMessage({
                     id: getPreviewPluginTrad("containers.Edit.preview"),
                 }),
