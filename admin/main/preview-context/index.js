@@ -112,17 +112,21 @@ var helperCleanData = function (value, key) {
     return value;
 };
 var cleanData = function (retrievedData, currentSchema, componentsSchema) {
-    var getType = function (schema, attrName) { return (0, lodash_1.get)(schema, ['attributes', attrName, 'type'], ''); };
-    var getOtherInfos = function (schema, arr) { return (0, lodash_1.get)(schema, __spreadArray(['attributes'], __read(arr), false), ''); };
+    var getType = function (schema, attrName) {
+        return (0, lodash_1.get)(schema, ["attributes", attrName, "type"], "");
+    };
+    var getOtherInfos = function (schema, arr) {
+        return (0, lodash_1.get)(schema, __spreadArray(["attributes"], __read(arr), false), "");
+    };
     var recursiveCleanData = function (data, schema) {
         return Object.keys(data).reduce(function (acc, current) {
             var attrType = getType(schema, current);
             var value = (0, lodash_1.get)(data, current);
-            var component = getOtherInfos(schema, [current, 'component']);
-            var isRepeatable = getOtherInfos(schema, [current, 'repeatable']);
+            var component = getOtherInfos(schema, [current, "component"]);
+            var isRepeatable = getOtherInfos(schema, [current, "repeatable"]);
             var cleanedData;
             switch (attrType) {
-                case 'json':
+                case "json":
                     try {
                         cleanedData = JSON.parse(value);
                     }
@@ -130,22 +134,30 @@ var cleanData = function (retrievedData, currentSchema, componentsSchema) {
                         cleanedData = value;
                     }
                     break;
-                case 'date':
+                case "date":
                     cleanedData =
-                        value && value._isAMomentObject === true ? value.format('YYYY-MM-DD') : value;
+                        value && value._isAMomentObject === true
+                            ? value.format("YYYY-MM-DD")
+                            : value;
                     break;
-                case 'datetime':
-                    cleanedData = value && value._isAMomentObject === true ? value.toISOString() : value;
+                case "datetime":
+                    cleanedData =
+                        value && value._isAMomentObject === true
+                            ? value.toISOString()
+                            : value;
                     break;
-                case 'media':
-                    if (getOtherInfos(schema, [current, 'multiple']) === true) {
-                        cleanedData = value ? value.filter(function (file) { return !(file instanceof File); }) : null;
+                case "media":
+                    if (getOtherInfos(schema, [current, "multiple"]) === true) {
+                        cleanedData = value
+                            ? value.filter(function (file) { return !(file instanceof File); })
+                            : null;
                     }
                     else {
-                        cleanedData = (0, lodash_1.get)(value, 0) instanceof File ? null : (0, lodash_1.get)(value, 'id', null);
+                        cleanedData =
+                            (0, lodash_1.get)(value, 0) instanceof File ? null : (0, lodash_1.get)(value, "id", null);
                     }
                     break;
-                case 'component':
+                case "component":
                     if (isRepeatable) {
                         cleanedData = value
                             ? value.map(function (data) {
@@ -155,10 +167,12 @@ var cleanData = function (retrievedData, currentSchema, componentsSchema) {
                             : value;
                     }
                     else {
-                        cleanedData = value ? recursiveCleanData(value, componentsSchema[component]) : value;
+                        cleanedData = value
+                            ? recursiveCleanData(value, componentsSchema[component])
+                            : value;
                     }
                     break;
-                case 'dynamiczone':
+                case "dynamiczone":
                     cleanedData = value.map(function (componentData) {
                         var subCleanedData = recursiveCleanData(componentData, componentsSchema[componentData.__component]);
                         return subCleanedData;
@@ -166,7 +180,7 @@ var cleanData = function (retrievedData, currentSchema, componentsSchema) {
                     break;
                 default:
                     // The helper is mainly used for the relations in order to just send the id
-                    cleanedData = helperCleanData(value, 'id');
+                    cleanedData = helperCleanData(value, "id");
             }
             acc[current] = cleanedData;
             return acc;
@@ -191,7 +205,7 @@ var removeKeyInObject = function (obj, keyToRemove) {
             }
             return __assign(__assign({}, acc), (_a = {}, _a[current] = value.map(function (obj) { return removeKeyInObject(obj, keyToRemove); }), _a));
         }
-        if (typeof value === 'object') {
+        if (typeof value === "object") {
             if (value._isAMomentObject === true) {
                 return __assign(__assign({}, acc), (_b = {}, _b[current] = value, _b));
             }
@@ -233,7 +247,7 @@ var PreviewProvider = function (props) {
     }, [initialData, isCreatingEntry, modifiedData]);
     var createFormData = (0, react_1.useCallback)(function (data) {
         // First we need to remove the added keys needed for the dnd
-        var preparedData = removeKeyInObject((0, lodash_1.cloneDeep)(data), '__temp_key__');
+        var preparedData = removeKeyInObject((0, lodash_1.cloneDeep)(data), "__temp_key__");
         // Then we need to apply our helper
         var cleanedData = cleanData(preparedData, layout, componentLayouts);
         return cleanedData;
@@ -250,32 +264,37 @@ var PreviewProvider = function (props) {
                 }),
                 color: "secondary",
                 onClick: function () { return __awaiter(void 0, void 0, void 0, function () {
-                    var data, body, _e_1;
+                    var data, body, res, _e_1;
                     return __generator(this, function (_a) {
                         switch (_a.label) {
                             case 0:
-                                _a.trys.push([0, 2, , 3]);
+                                _a.trys.push([0, 5, , 6]);
                                 return [4 /*yield*/, (0, strapi_helper_plugin_1.request)("/preview-content/preview-url/".concat(layout.apiID, "/").concat(initialData.id), {
                                         method: "GET",
                                         params: params_1,
                                     })];
                             case 1:
                                 data = _a.sent();
-                                if (data.url) {
-                                    body = createFormData(modifiedData);
-                                    console.log({ data: data, body: body });
-                                    // const res = await request(data.url, { method: 'POST', body })
-                                }
-                                else {
-                                    strapi.notification.error(getPreviewPluginTrad("error.previewUrl.notFound"));
-                                }
-                                return [3 /*break*/, 3];
+                                if (!data.url) return [3 /*break*/, 3];
+                                body = createFormData(modifiedData);
+                                return [4 /*yield*/, (0, strapi_helper_plugin_1.request)(data.url, { method: "POST", body: body })];
                             case 2:
-                                _e_1 = _a.sent();
-                                console.log('Error previewing:', _e_1.stack || _e_1.message || _e_1);
+                                res = _a.sent();
+                                console.log({ data: data, body: body, res: res });
+                                if (res) {
+                                    window.open(res, "_blank");
+                                }
+                                return [3 /*break*/, 4];
+                            case 3:
                                 strapi.notification.error(getPreviewPluginTrad("error.previewUrl.notFound"));
-                                return [3 /*break*/, 3];
-                            case 3: return [2 /*return*/];
+                                _a.label = 4;
+                            case 4: return [3 /*break*/, 6];
+                            case 5:
+                                _e_1 = _a.sent();
+                                console.log("Error previewing:", _e_1.stack || _e_1.message || _e_1);
+                                strapi.notification.error(getPreviewPluginTrad("error.previewUrl.notFound"));
+                                return [3 /*break*/, 6];
+                            case 6: return [2 /*return*/];
                         }
                     });
                 }); },

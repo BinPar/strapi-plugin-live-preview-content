@@ -18,7 +18,7 @@ const PreviewContext = createContext(undefined);
 
 const helperCleanData = (value, key) => {
   if (isArray(value)) {
-    return value.map(obj => (obj[key] ? obj[key] : obj));
+    return value.map((obj) => (obj[key] ? obj[key] : obj));
   }
   if (isObject(value)) {
     return value[key];
@@ -28,19 +28,21 @@ const helperCleanData = (value, key) => {
 };
 
 const cleanData = (retrievedData, currentSchema, componentsSchema) => {
-  const getType = (schema, attrName) => get(schema, ['attributes', attrName, 'type'], '');
-  const getOtherInfos = (schema, arr) => get(schema, ['attributes', ...arr], '');
+  const getType = (schema, attrName) =>
+    get(schema, ["attributes", attrName, "type"], "");
+  const getOtherInfos = (schema, arr) =>
+    get(schema, ["attributes", ...arr], "");
 
   const recursiveCleanData = (data, schema) => {
     return Object.keys(data).reduce((acc, current) => {
       const attrType = getType(schema, current);
       const value = get(data, current);
-      const component = getOtherInfos(schema, [current, 'component']);
-      const isRepeatable = getOtherInfos(schema, [current, 'repeatable']);
+      const component = getOtherInfos(schema, [current, "component"]);
+      const isRepeatable = getOtherInfos(schema, [current, "repeatable"]);
       let cleanedData;
 
       switch (attrType) {
-        case 'json':
+        case "json":
           try {
             cleanedData = JSON.parse(value);
           } catch (err) {
@@ -48,35 +50,48 @@ const cleanData = (retrievedData, currentSchema, componentsSchema) => {
           }
 
           break;
-        case 'date':
+        case "date":
           cleanedData =
-            value && value._isAMomentObject === true ? value.format('YYYY-MM-DD') : value;
+            value && value._isAMomentObject === true
+              ? value.format("YYYY-MM-DD")
+              : value;
           break;
-        case 'datetime':
-          cleanedData = value && value._isAMomentObject === true ? value.toISOString() : value;
+        case "datetime":
+          cleanedData =
+            value && value._isAMomentObject === true
+              ? value.toISOString()
+              : value;
           break;
-        case 'media':
-          if (getOtherInfos(schema, [current, 'multiple']) === true) {
-            cleanedData = value ? value.filter(file => !(file instanceof File)) : null;
+        case "media":
+          if (getOtherInfos(schema, [current, "multiple"]) === true) {
+            cleanedData = value
+              ? value.filter((file) => !(file instanceof File))
+              : null;
           } else {
-            cleanedData = get(value, 0) instanceof File ? null : get(value, 'id', null);
+            cleanedData =
+              get(value, 0) instanceof File ? null : get(value, "id", null);
           }
           break;
-        case 'component':
+        case "component":
           if (isRepeatable) {
             cleanedData = value
-              ? value.map(data => {
-                  const subCleanedData = recursiveCleanData(data, componentsSchema[component]);
+              ? value.map((data) => {
+                  const subCleanedData = recursiveCleanData(
+                    data,
+                    componentsSchema[component]
+                  );
 
                   return subCleanedData;
                 })
               : value;
           } else {
-            cleanedData = value ? recursiveCleanData(value, componentsSchema[component]) : value;
+            cleanedData = value
+              ? recursiveCleanData(value, componentsSchema[component])
+              : value;
           }
           break;
-        case 'dynamiczone':
-          cleanedData = value.map(componentData => {
+        case "dynamiczone":
+          cleanedData = value.map((componentData) => {
             const subCleanedData = recursiveCleanData(
               componentData,
               componentsSchema[componentData.__component]
@@ -87,7 +102,7 @@ const cleanData = (retrievedData, currentSchema, componentsSchema) => {
           break;
         default:
           // The helper is mainly used for the relations in order to just send the id
-          cleanedData = helperCleanData(value, 'id');
+          cleanedData = helperCleanData(value, "id");
       }
 
       acc[current] = cleanedData;
@@ -118,10 +133,13 @@ const removeKeyInObject = (obj, keyToRemove) => {
         return acc;
       }
 
-      return { ...acc, [current]: value.map(obj => removeKeyInObject(obj, keyToRemove)) };
+      return {
+        ...acc,
+        [current]: value.map((obj) => removeKeyInObject(obj, keyToRemove)),
+      };
     }
 
-    if (typeof value === 'object') {
+    if (typeof value === "object") {
       if (value._isAMomentObject === true) {
         return { ...acc, [current]: value };
       }
@@ -184,15 +202,11 @@ export const PreviewProvider = (props) => {
   }, [initialData, isCreatingEntry, modifiedData]);
 
   const createFormData = useCallback(
-    data => {
+    (data) => {
       // First we need to remove the added keys needed for the dnd
-      const preparedData = removeKeyInObject(cloneDeep(data), '__temp_key__');
+      const preparedData = removeKeyInObject(cloneDeep(data), "__temp_key__");
       // Then we need to apply our helper
-      const cleanedData = cleanData(
-        preparedData,
-        layout,
-        componentLayouts
-      );
+      const cleanedData = cleanData(preparedData, layout, componentLayouts);
 
       return cleanedData;
     },
@@ -225,15 +239,19 @@ export const PreviewProvider = (props) => {
 
             if (data.url) {
               const body = createFormData(modifiedData);
-              console.log({ data, body });
-              // const res = await request(data.url, { method: 'POST', body })
+              const res = await request(data.url, { method: "POST", body });
+              console.log({ data, body, res });
+
+              if (res) {
+                window.open(res, "_blank");
+              }
             } else {
               strapi.notification.error(
                 getPreviewPluginTrad("error.previewUrl.notFound")
               );
             }
           } catch (_e) {
-            console.log('Error previewing:', _e.stack || _e.message || _e);
+            console.log("Error previewing:", _e.stack || _e.message || _e);
             strapi.notification.error(
               getPreviewPluginTrad("error.previewUrl.notFound")
             );
