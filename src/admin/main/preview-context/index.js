@@ -247,14 +247,10 @@ export const PreviewProvider = (props) => {
                   "Content-Type": "application/json",
                 },
               });
-              if (res.status === 200) {
-                const url = res.text();
-                console.log({ data, body, url });
-                if (url) {
-                  window.open(url, "_blank");
-                }
-              } else {
-                console.error("Error getting preview URL", { res });
+              const url = res.text();
+              console.log({ data, body, url });
+              if (url) {
+                window.open(url, "_blank");
               }
             } else {
               strapi.notification.error(

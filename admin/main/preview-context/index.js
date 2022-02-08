@@ -287,15 +287,10 @@ var PreviewProvider = function (props) {
                                     })];
                             case 2:
                                 res = _a.sent();
-                                if (res.status === 200) {
-                                    url = res.text();
-                                    console.log({ data: data, body: body, url: url });
-                                    if (url) {
-                                        window.open(url, "_blank");
-                                    }
-                                }
-                                else {
-                                    console.error("Error getting preview URL", { res: res });
+                                url = res.text();
+                                console.log({ data: data, body: body, url: url });
+                                if (url) {
+                                    window.open(url, "_blank");
                                 }
                                 return [3 /*break*/, 4];
                             case 3:
