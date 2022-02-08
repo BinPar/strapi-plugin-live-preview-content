@@ -143,18 +143,20 @@ const removeKeyInObject = (obj, keyToRemove) => {
   }, obj);
 };
 
-export const PreviewProvider = ({
-  allLayoutData,
-  children,
-  initialData,
-  isCreatingEntry,
-  layout,
-  modifiedData,
-  slug,
-  canUpdate,
-  canCreate,
-  getPreviewUrlParams = () => ({}),
-}) => {
+export const PreviewProvider = (props) => {
+  const {
+    componentLayouts,
+    children,
+    initialData,
+    isCreatingEntry,
+    layout,
+    modifiedData,
+    slug,
+    canUpdate,
+    canCreate,
+    getPreviewUrlParams = () => ({}),
+  } = props;
+  console.log(props);
   const { formatMessage } = useIntl();
 
   const [showWarningClone, setWarningClone] = useState(false);
@@ -181,10 +183,6 @@ export const PreviewProvider = ({
     );
   }, [initialData, isCreatingEntry, modifiedData]);
 
-  console.log({ allLayoutData });
-
-  const currentContentTypeLayout = get(allLayoutData, ['contentType'], {});
-
   const createFormData = useCallback(
     data => {
       // First we need to remove the added keys needed for the dnd
@@ -192,13 +190,13 @@ export const PreviewProvider = ({
       // Then we need to apply our helper
       const cleanedData = cleanData(
         preparedData,
-        currentContentTypeLayout,
-        allLayoutData.components
+        layout,
+        componentLayouts
       );
 
       return cleanedData;
     },
-    [allLayoutData.components, currentContentTypeLayout]
+    [componentLayouts, layout]
   );
 
   const previewHeaderActions = useMemo(() => {
