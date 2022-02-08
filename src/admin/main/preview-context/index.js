@@ -239,7 +239,7 @@ export const PreviewProvider = (props) => {
 
             if (data.url) {
               const body = createFormData(modifiedData);
-              const res = await request(data.url, { method: "POST", body });
+              const res = await request(data.url, { method: "POST", body, mode: 'no-cors' });
               console.log({ data, body, res });
 
               if (res) {
