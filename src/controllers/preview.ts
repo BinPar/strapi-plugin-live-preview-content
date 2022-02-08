@@ -56,6 +56,23 @@ module.exports = {
 
     ctx.send({ url: url || "" });
   },
+  async getRemotePreviewUrl(ctx: Context) {
+    const {
+      // @ts-ignore
+      request: { body: { url, info } },
+    } = ctx;
+    
+    const res = await fetch(url, {
+      method: "POST",
+      body: JSON.stringify(info),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const previewUrl = await res.text();
+    console.log({ url, info, previewUrl });
+    ctx.send({ url: previewUrl || "" });
+  },
   /**
    * Get settings of the plugin
    */

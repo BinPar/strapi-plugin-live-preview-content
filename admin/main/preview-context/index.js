@@ -264,46 +264,40 @@ var PreviewProvider = function (props) {
                 }),
                 color: "secondary",
                 onClick: function () { return __awaiter(void 0, void 0, void 0, function () {
-                    var data, body, res, url, _e_1;
+                    var data, info, res, _e_1;
                     return __generator(this, function (_a) {
                         switch (_a.label) {
                             case 0:
-                                _a.trys.push([0, 6, , 7]);
+                                _a.trys.push([0, 5, , 6]);
                                 return [4 /*yield*/, (0, strapi_helper_plugin_1.request)("/preview-content/preview-url/".concat(layout.apiID, "/").concat(initialData.id), {
                                         method: "GET",
                                         params: params_1,
                                     })];
                             case 1:
                                 data = _a.sent();
-                                if (!data.url) return [3 /*break*/, 4];
-                                body = createFormData(modifiedData);
-                                return [4 /*yield*/, fetch(data.url, {
+                                if (!data.url) return [3 /*break*/, 3];
+                                info = createFormData(modifiedData);
+                                return [4 /*yield*/, (0, strapi_helper_plugin_1.request)('/preview-content/remote-preview-url', {
                                         method: "POST",
-                                        body: JSON.stringify(body),
-                                        headers: {
-                                            "Content-Type": "application/json",
-                                        },
+                                        body: JSON.stringify({ url: data.url, info: info }),
                                     })];
                             case 2:
                                 res = _a.sent();
-                                return [4 /*yield*/, res.text()];
-                            case 3:
-                                url = _a.sent();
-                                console.log({ data: data, body: body, url: url });
-                                if (url) {
-                                    window.open(url, "_blank");
+                                console.log({ data: data, body: info, res: res });
+                                if (res.url) {
+                                    window.open(res.url, "_blank");
                                 }
-                                return [3 /*break*/, 5];
-                            case 4:
+                                return [3 /*break*/, 4];
+                            case 3:
                                 strapi.notification.error(getPreviewPluginTrad("error.previewUrl.notFound"));
-                                _a.label = 5;
-                            case 5: return [3 /*break*/, 7];
-                            case 6:
+                                _a.label = 4;
+                            case 4: return [3 /*break*/, 6];
+                            case 5:
                                 _e_1 = _a.sent();
                                 console.log("Error previewing:", _e_1.stack || _e_1.message || _e_1);
                                 strapi.notification.error(getPreviewPluginTrad("error.previewUrl.notFound"));
-                                return [3 /*break*/, 7];
-                            case 7: return [2 /*return*/];
+                                return [3 /*break*/, 6];
+                            case 6: return [2 /*return*/];
                         }
                     });
                 }); },

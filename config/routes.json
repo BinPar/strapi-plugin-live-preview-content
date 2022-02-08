@@ -39,6 +39,14 @@
             "config": {
                 "policies": []
             }
+        },
+        {
+            "method": "POST",
+            "path": "/remote-preview-url",
+            "handler": "preview.getRemotePreviewUrl",
+            "config": {
+                "policies": []
+            }
         }
     ]
 }

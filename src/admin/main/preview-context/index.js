@@ -238,18 +238,14 @@ export const PreviewProvider = (props) => {
             );
 
             if (data.url) {
-              const body = createFormData(modifiedData);
-              const res = await fetch(data.url, {
+              const info = createFormData(modifiedData);
+              const res = await request('/preview-content/remote-preview-url', {
                 method: "POST",
-                body: JSON.stringify(body),
-                headers: {
-                  "Content-Type": "application/json",
-                },
+                body: JSON.stringify({ url: data.url, info }),
               });
-              const url = await res.text();
-              console.log({ data, body, url });
-              if (url) {
-                window.open(url, "_blank");
+              console.log({ data, body: info, res });
+              if (res.url) {
+                window.open(res.url, "_blank");
               }
             } else {
               strapi.notification.error(
