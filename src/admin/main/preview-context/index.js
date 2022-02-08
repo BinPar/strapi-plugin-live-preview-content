@@ -242,15 +242,19 @@ export const PreviewProvider = (props) => {
               const res = await fetch(data.url, {
                 method: "POST",
                 body: JSON.stringify(body),
-                mode: 'no-cors',
+                mode: "no-cors",
                 headers: {
-                'Content-Type': 'application/json',
+                  "Content-Type": "application/json",
                 },
               });
-              console.log({ data, body, res });
-
-              if (res) {
-                window.open(res, "_blank");
+              if (res.status === 200) {
+                const url = res.text();
+                console.log({ data, body, url });
+                if (url) {
+                  window.open(url, "_blank");
+                }
+              } else {
+                console.error("Error getting preview URL", { res });
               }
             } else {
               strapi.notification.error(

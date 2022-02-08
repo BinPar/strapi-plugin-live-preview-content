@@ -264,7 +264,7 @@ var PreviewProvider = function (props) {
                 }),
                 color: "secondary",
                 onClick: function () { return __awaiter(void 0, void 0, void 0, function () {
-                    var data, body, res, _e_1;
+                    var data, body, res, url, _e_1;
                     return __generator(this, function (_a) {
                         switch (_a.label) {
                             case 0:
@@ -280,16 +280,22 @@ var PreviewProvider = function (props) {
                                 return [4 /*yield*/, fetch(data.url, {
                                         method: "POST",
                                         body: JSON.stringify(body),
-                                        mode: 'no-cors',
+                                        mode: "no-cors",
                                         headers: {
-                                            'Content-Type': 'application/json',
+                                            "Content-Type": "application/json",
                                         },
                                     })];
                             case 2:
                                 res = _a.sent();
-                                console.log({ data: data, body: body, res: res });
-                                if (res) {
-                                    window.open(res, "_blank");
+                                if (res.status === 200) {
+                                    url = res.text();
+                                    console.log({ data: data, body: body, url: url });
+                                    if (url) {
+                                        window.open(url, "_blank");
+                                    }
+                                }
+                                else {
+                                    console.error("Error getting preview URL", { res: res });
                                 }
                                 return [3 /*break*/, 4];
                             case 3:
