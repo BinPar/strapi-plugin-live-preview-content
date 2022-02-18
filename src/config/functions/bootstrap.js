@@ -5,14 +5,14 @@ module.exports = async () => {
       section: "plugins",
       displayName: "Access the Preview",
       uid: "read",
-      pluginName: "preview-content",
+      pluginName: "live-preview-content",
     },
   ];
 
   // set plugin store
   const configurator = strapi.store({
     type: "plugin",
-    name: "preview-content",
+    name: "live-preview-content",
     key: "settings",
   });
 

@@ -39,7 +39,7 @@ module.exports = {
     const model = await global.strapi.query(contentType)?.model;
 
     if (model) {
-      return model.pluginOptions?.['preview-content']?.previewable || model.options?.previewable;
+      return model.pluginOptions?.['live-preview-content']?.previewable || model.options?.previewable;
     }
     throw new PreviewError(400, "Wrong contentType");
   },
@@ -120,7 +120,7 @@ module.exports = {
   ) {
     // @ts-ignore
     const contentTypeModel = strapi.models[contentType]
-    const contentTypeConfig = contentTypeModel?.pluginOptions?.['preview-content'];
+    const contentTypeConfig = contentTypeModel?.pluginOptions?.['live-preview-content'];
 
     const entity = await this.getSettings();
 
@@ -164,7 +164,7 @@ module.exports = {
     return strapi
       .store({
         type: "plugin",
-        name: "preview-content",
+        name: "live-preview-content",
         key: "settings",
       })
       .get();
@@ -177,7 +177,7 @@ module.exports = {
     return strapi
       .store({
         type: "plugin",
-        name: "preview-content",
+        name: "live-preview-content",
         key: "settings",
       })
       .set({ value });

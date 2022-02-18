@@ -423,7 +423,7 @@ const getRequestUrl = (path) =>
 const getFrontendEntityUrl = (path, id) =>
   `/admin/plugins/${CONTENT_MANAGER_PLUGIN_ID}/collectionType/${path}/create/clone/${id}`;
 
-const getPreviewPluginTrad = (id) => `preview-content.${id}`;
+const getPreviewPluginTrad = (id) => `live-preview-content.${id}`;
 
 PreviewProvider.propTypes = {
   children: PropTypes.node.isRequired,

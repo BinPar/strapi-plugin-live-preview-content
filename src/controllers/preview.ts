@@ -18,7 +18,8 @@ module.exports = {
    * @return Returns true or false for preview
    */
   async isPreviewable(ctx: Context) {
-    const service = global.strapi.plugins["preview-content"].services.preview;
+    const service =
+      global.strapi.plugins["live-preview-content"].services.preview;
     const isPreviewable = await service.isPreviewable(ctx.params.contentType);
 
     ctx.send({ isPreviewable });
@@ -31,7 +32,8 @@ module.exports = {
    * @returns Returns the content type by id, otherwise null.
    */
   async findOne(ctx: Context) {
-    const service = global.strapi.plugins["preview-content"].services.preview;
+    const service =
+      global.strapi.plugins["live-preview-content"].services.preview;
     const contentPreview = await service.findOne(
       ctx.params.contentType,
       ctx.params.id,
@@ -52,7 +54,8 @@ module.exports = {
       params: { contentType, id },
       query,
     } = ctx;
-    const service = global.strapi.plugins["preview-content"].services.preview;
+    const service =
+      global.strapi.plugins["live-preview-content"].services.preview;
     const url = await service.getPreviewUrl(contentType, id, query);
 
     ctx.send({ url: url || "" });
@@ -64,7 +67,6 @@ module.exports = {
     } = ctx;
 
     const { url, info } = body;
-
 
     const res = await axios.post(url, info, {
       headers: {
@@ -81,7 +83,7 @@ module.exports = {
   async getSettings(ctx: Context) {
     // @ts-ignore
     const data = await strapi.plugins[
-      "preview-content"
+      "live-preview-content"
     ].services.preview.getSettings();
 
     ctx.body = { data };
@@ -98,7 +100,9 @@ module.exports = {
     const data = await validateSettings(body);
 
     // @ts-ignore
-    await strapi.plugins["preview-content"].services.preview.setSettings(data);
+    await strapi.plugins["live-preview-content"].services.preview.setSettings(
+      data
+    );
 
     ctx.body = { data };
   },
