@@ -33,7 +33,7 @@ exports.default = (function (strapi) {
                             defaultMessage: "Preview Content",
                         },
                         name: "live-preview-content",
-                        to: "".concat(strapi.settingsBaseURL, "/preview-content"),
+                        to: "".concat(strapi.settingsBaseURL, "/live-preview-content"),
                         Component: function () { return react_1.default.createElement(SettingsPage_1.default, null); },
                         exact: false,
                         permissions: [

@@ -277,6 +277,7 @@ export const PreviewProvider = (props) => {
     previewable,
     initialData.cloneOf,
     initialData.id,
+    modifiedData,
     canCreate,
     canUpdate,
     isCreatingEntry,

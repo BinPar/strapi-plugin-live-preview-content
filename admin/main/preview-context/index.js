@@ -234,7 +234,7 @@ var PreviewProvider = function (props) {
         return setWarningPublish(function (prevState) { return !prevState; });
     };
     (0, react_1.useEffect)(function () {
-        (0, strapi_helper_plugin_1.request)("/preview-content/is-previewable/".concat(layout.apiID), {
+        (0, strapi_helper_plugin_1.request)("/live-preview-content/is-previewable/".concat(layout.apiID), {
             method: "GET",
         }).then(function (_a) {
             var isPreviewable = _a.isPreviewable;
@@ -269,7 +269,7 @@ var PreviewProvider = function (props) {
                         switch (_a.label) {
                             case 0:
                                 _a.trys.push([0, 5, , 6]);
-                                return [4 /*yield*/, (0, strapi_helper_plugin_1.request)("/preview-content/preview-url/".concat(layout.apiID, "/").concat(initialData.id), {
+                                return [4 /*yield*/, (0, strapi_helper_plugin_1.request)("/live-preview-content/preview-url/".concat(layout.apiID, "/").concat(initialData.id), {
                                         method: "GET",
                                         params: params_1,
                                     })];
@@ -277,7 +277,7 @@ var PreviewProvider = function (props) {
                                 data = _a.sent();
                                 if (!data.url) return [3 /*break*/, 3];
                                 info = createFormData(modifiedData);
-                                return [4 /*yield*/, (0, strapi_helper_plugin_1.request)('/preview-content/remote-preview-url', {
+                                return [4 /*yield*/, (0, strapi_helper_plugin_1.request)('/live-preview-content/remote-preview-url', {
                                         method: "POST",
                                         body: { url: data.url, info: info },
                                     })];
@@ -318,6 +318,7 @@ var PreviewProvider = function (props) {
         previewable,
         initialData.cloneOf,
         initialData.id,
+        modifiedData,
         canCreate,
         canUpdate,
         isCreatingEntry,
