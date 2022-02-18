@@ -1,3 +1,3 @@
-declare const _exports: string;
-export = _exports;
+export = pluginId;
+declare const pluginId: any;
 //# sourceMappingURL=pluginId.d.ts.map

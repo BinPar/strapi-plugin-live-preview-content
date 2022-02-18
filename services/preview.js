@@ -90,7 +90,7 @@ module.exports = {
                     case 1:
                         model = _e.sent();
                         if (model) {
-                            return [2 /*return*/, ((_c = (_b = model.pluginOptions) === null || _b === void 0 ? void 0 : _b['preview-content']) === null || _c === void 0 ? void 0 : _c.previewable) || ((_d = model.options) === null || _d === void 0 ? void 0 : _d.previewable)];
+                            return [2 /*return*/, ((_c = (_b = model.pluginOptions) === null || _b === void 0 ? void 0 : _b['live-preview-content']) === null || _c === void 0 ? void 0 : _c.previewable) || ((_d = model.options) === null || _d === void 0 ? void 0 : _d.previewable)];
                         }
                         throw new PreviewError(400, "Wrong contentType");
                 }
@@ -163,7 +163,7 @@ module.exports = {
                 switch (_b.label) {
                     case 0:
                         contentTypeModel = strapi.models[contentType];
-                        contentTypeConfig = (_a = contentTypeModel === null || contentTypeModel === void 0 ? void 0 : contentTypeModel.pluginOptions) === null || _a === void 0 ? void 0 : _a['preview-content'];
+                        contentTypeConfig = (_a = contentTypeModel === null || contentTypeModel === void 0 ? void 0 : contentTypeModel.pluginOptions) === null || _a === void 0 ? void 0 : _a['live-preview-content'];
                         return [4 /*yield*/, this.getSettings()];
                     case 1:
                         entity = _b.sent();
@@ -209,7 +209,7 @@ module.exports = {
                 return [2 /*return*/, strapi
                         .store({
                         type: "plugin",
-                        name: "preview-content",
+                        name: "live-preview-content",
                         key: "settings",
                     })
                         .get()];
@@ -226,7 +226,7 @@ module.exports = {
                 return [2 /*return*/, strapi
                         .store({
                         type: "plugin",
-                        name: "preview-content",
+                        name: "live-preview-content",
                         key: "settings",
                     })
                         .set({ value: value })];

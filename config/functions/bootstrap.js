@@ -45,12 +45,12 @@ module.exports = function () { return __awaiter(void 0, void 0, void 0, function
                         section: "plugins",
                         displayName: "Access the Preview",
                         uid: "read",
-                        pluginName: "preview-content",
+                        pluginName: "live-preview-content",
                     },
                 ];
                 configurator = strapi.store({
                     type: "plugin",
-                    name: "preview-content",
+                    name: "live-preview-content",
                     key: "settings",
                 });
                 return [4 /*yield*/, configurator.get()];

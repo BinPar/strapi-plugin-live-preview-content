@@ -60,7 +60,7 @@ module.exports = {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        service = global.strapi.plugins["preview-content"].services.preview;
+                        service = global.strapi.plugins["live-preview-content"].services.preview;
                         return [4 /*yield*/, service.isPreviewable(ctx.params.contentType)];
                     case 1:
                         isPreviewable = _a.sent();
@@ -83,7 +83,7 @@ module.exports = {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        service = global.strapi.plugins["preview-content"].services.preview;
+                        service = global.strapi.plugins["live-preview-content"].services.preview;
                         return [4 /*yield*/, service.findOne(ctx.params.contentType, ctx.params.id, ctx.query)];
                     case 1:
                         contentPreview = _a.sent();
@@ -107,7 +107,7 @@ module.exports = {
                 switch (_b.label) {
                     case 0:
                         _a = ctx.params, contentType = _a.contentType, id = _a.id, query = ctx.query;
-                        service = global.strapi.plugins["preview-content"].services.preview;
+                        service = global.strapi.plugins["live-preview-content"].services.preview;
                         return [4 /*yield*/, service.getPreviewUrl(contentType, id, query)];
                     case 1:
                         url = _b.sent();
@@ -147,7 +147,7 @@ module.exports = {
             var data;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, strapi.plugins["preview-content"].services.preview.getSettings()];
+                    case 0: return [4 /*yield*/, strapi.plugins["live-preview-content"].services.preview.getSettings()];
                     case 1:
                         data = _a.sent();
                         ctx.body = { data: data };
@@ -170,7 +170,7 @@ module.exports = {
                     case 1:
                         data = _a.sent();
                         // @ts-ignore
-                        return [4 /*yield*/, strapi.plugins["preview-content"].services.preview.setSettings(data)];
+                        return [4 /*yield*/, strapi.plugins["live-preview-content"].services.preview.setSettings(data)];
                     case 2:
                         // @ts-ignore
                         _a.sent();

@@ -33,7 +33,7 @@ export default (strapi) => {
               defaultMessage: "Preview Content",
             },
             name: "live-preview-content",
-            to: `${strapi.settingsBaseURL}/preview-content`,
+            to: `${strapi.settingsBaseURL}/live-preview-content`,
             Component: () => <SettingsPage />,
             exact: false,
             permissions: [

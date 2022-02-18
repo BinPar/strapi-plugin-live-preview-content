@@ -187,7 +187,7 @@ export const PreviewProvider = (props) => {
     setWarningPublish((prevState) => !prevState);
 
   useEffect(() => {
-    request(`/preview-content/is-previewable/${layout.apiID}`, {
+    request(`/live-preview-content/is-previewable/${layout.apiID}`, {
       method: "GET",
     }).then(({ isPreviewable }) => {
       setIsPreviewable(isPreviewable);
@@ -230,7 +230,7 @@ export const PreviewProvider = (props) => {
         onClick: async () => {
           try {
             const data = await request(
-              `/preview-content/preview-url/${layout.apiID}/${initialData.id}`,
+              `/live-preview-content/preview-url/${layout.apiID}/${initialData.id}`,
               {
                 method: "GET",
                 params,
@@ -239,7 +239,7 @@ export const PreviewProvider = (props) => {
 
             if (data.url) {
               const info = createFormData(modifiedData);
-              const res = await request('/preview-content/remote-preview-url', {
+              const res = await request('/live-preview-content/remote-preview-url', {
                 method: "POST",
                 body: { url: data.url, info },
               });

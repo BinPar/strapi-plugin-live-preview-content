@@ -429,7 +429,7 @@ var getRequestUrl = function (path) {
 var getFrontendEntityUrl = function (path, id) {
     return "/admin/plugins/".concat(CONTENT_MANAGER_PLUGIN_ID, "/collectionType/").concat(path, "/create/clone/").concat(id);
 };
-var getPreviewPluginTrad = function (id) { return "preview-content.".concat(id); };
+var getPreviewPluginTrad = function (id) { return "live-preview-content.".concat(id); };
 exports.PreviewProvider.propTypes = {
     children: prop_types_1.default.node.isRequired,
     canUpdate: prop_types_1.default.bool.isRequired,
